@@ -1,0 +1,356 @@
+:root {
+    --bg-color: #2c3e50;
+    --red: #D32F2F;
+    --green: #388E3C;
+    --yellow: #FBC02D;
+    --blue: #1976D2;
+    --board-bg: #f5f6fa;
+    --cell-border: #bdc3c7;
+    --text-light: #fff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: radial-gradient(circle at center, #34495e, #1a252f);
+    color: var(--text-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.screen {
+    display: none;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* ==========================================
+   SCOREBOARD STYLES
+   ========================================== */
+.scoreboard {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid var(--yellow);
+    color: white;
+    min-width: 180px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    z-index: 50;
+}
+
+.scoreboard h3 {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    text-align: center;
+    color: gold;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 5px;
+}
+
+.scoreboard ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+.scoreboard li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+}
+
+#reset-scores-btn {
+    background: #e74c3c;
+    padding: 5px;
+    font-size: 0.8rem;
+    margin: 0;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+#reset-scores-btn:hover {
+    background: #c0392b;
+}
+
+/* Setup Screen */
+.setup-box {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    text-align: center;
+    margin-top: 20px;
+}
+
+input, button {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+}
+
+button {
+    background: var(--yellow);
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* Main Game Layout */
+.game-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px;
+}
+
+.panels-left, .panels-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+}
+
+.player-panel {
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    opacity: 0.5;
+    transition: all 0.3s;
+    border: 3px solid transparent;
+    position: relative;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.player-panel.active {
+    opacity: 1;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255,255,255,0.5);
+}
+
+.red-panel { background-color: var(--red); }
+.green-panel { background-color: var(--green); }
+.yellow-panel { background-color: var(--yellow); }
+.blue-panel { background-color: var(--blue); }
+
+/* The Board */
+.board-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.board {
+    width: 500px;
+    height: 500px;
+    background-color: transparent; 
+    border: none;
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+}
+
+.cell {
+    border: 1px solid var(--cell-border);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+    font-size: 1.2rem; 
+    user-select: none; 
+    background-color: #f8f9fa; 
+}
+
+/* 3D Dice Animation */
+.scene {
+    width: 80px;
+    height: 80px;
+    perspective: 400px;
+    margin: 0 auto 15px auto;
+}
+
+.cube {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: translateZ(-40px);
+    transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cube.rolling {
+    animation: rollAnim 1s ease-out;
+}
+
+.cube__face {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: white;
+    border: 2px solid #ccc;
+    font-size: 40px;
+    font-weight: bold;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.cube__face--1 { transform: rotateY(  0deg) translateZ(40px); }
+.cube__face--2 { transform: rotateY( 90deg) translateZ(40px); }
+.cube__face--3 { transform: rotateY(180deg) translateZ(40px); }
+.cube__face--4 { transform: rotateY(-90deg) translateZ(40px); }
+.cube__face--5 { transform: rotateX( 90deg) translateZ(40px); }
+.cube__face--6 { transform: rotateX(-90deg) translateZ(40px); }
+
+@keyframes rollAnim {
+    0% { transform: translateZ(-40px) rotateX(0deg) rotateY(0deg); }
+    50% { transform: translateZ(-100px) rotateX(360deg) rotateY(360deg); }
+    100% { transform: translateZ(-40px) rotateX(720deg) rotateY(720deg); }
+}
+
+#restart-btn {
+    background: var(--red);
+    color: white;
+    margin-top: 15px;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+#restart-btn:hover {
+    background: #ff5252;
+}
+
+/* Tokens */
+.token {
+    width: 70%;
+    height: 70%;
+    border-radius: 50%;
+    position: absolute;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.4), inset 0 -3px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s ease-in-out;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.player-panel .token {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    margin: 2px;
+}
+
+.token.red { background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--red)); }
+.token.green { background: radial-gradient(circle at 30% 30%, #69f0ae, var(--green)); }
+.token.yellow { background: radial-gradient(circle at 30% 30%, #fff176, var(--yellow)); }
+.token.blue { background: radial-gradient(circle at 30% 30%, #64b5f6, var(--blue)); }
+
+/* Confetti Canvas */
+#confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* ==========================================
+   MOBILE RESPONSIVENESS
+   ========================================== */
+@media (max-width: 800px) {
+    body {
+        overflow-y: auto; 
+        padding: 20px 0;
+    }
+    
+    .scoreboard {
+        position: static;
+        width: 90%;
+        max-width: 400px;
+        margin: 0 auto 20px auto;
+    }
+
+    .game-container {
+        flex-direction: column;
+        padding: 10px;
+        gap: 15px;
+    }
+    .board {
+        width: 95vw;
+        height: 95vw;
+        max-width: 450px;
+        max-height: 450px;
+    }
+    .panels-left, .panels-right {
+        flex-direction: row;
+        width: 100%;
+        max-width: 450px;
+        justify-content: space-between;
+        gap: 10px;
+    }
+    .player-panel {
+        flex: 1; 
+        min-height: 90px;
+        padding: 10px;
+    }
+    .player-panel h3 {
+        font-size: 1rem;
+        margin-bottom: 5px;
+    }
+    .player-panel p {
+        font-size: 0.8rem;
+    }
+    .player-panel .token {
+        width: 22px;
+        height: 22px;
+    }
+    .cell {
+        font-size: 0.9rem;
+    }
+    .setup-box {
+        width: 90%;
+        max-width: 400px;
+        padding: 20px;
+    }
+}
