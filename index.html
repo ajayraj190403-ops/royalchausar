@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Chausar Multiplayer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="scoreboard" class="scoreboard">
+        <h3>🏆 Hall of Fame</h3>
+        <ul id="score-list">
+            </ul>
+        <button id="reset-scores-btn">Reset Scores</button>
+    </div>
+
+    <div id="setup-screen" class="screen active">
+        <h1>Royal Chausar</h1>
+        <div class="setup-box">
+            <label for="player-count">Number of Players (2-4):</label>
+            <input type="number" id="player-count" min="2" max="4" value="4">
+            
+            <div id="name-inputs">
+                <input type="text" id="p1-name" value="Ajayraj (Red)">
+                <input type="text" id="p2-name" value="Player 2 (Green)">
+                <input type="text" id="p3-name" value="Player 3 (Yellow)">
+                <input type="text" id="p4-name" value="Player 4 (Blue)">
+            </div>
+            
+            <button id="start-btn">Start Game</button>
+        </div>
+    </div>
+
+    <div id="game-screen" class="screen">
+        <div class="game-container">
+            <div class="panels-left">
+                <div id="panel-0" class="player-panel red-panel">
+                    <h3 id="name-0">Player 1</h3>
+                    <p>Tokens in base: <span id="base-0">4</span></p>
+                </div>
+                <div id="panel-3" class="player-panel blue-panel">
+                    <h3 id="name-3">Player 4</h3>
+                    <p>Tokens in base: <span id="base-3">4</span></p>
+                </div>
+            </div>
+
+            <div class="board-wrapper">
+                <div id="board" class="board">
+                    </div>
+                
+                <div class="dice-area">
+                    <div class="scene">
+                        <div id="dice" class="cube">
+                            <div class="cube__face cube__face--1">1</div>
+                            <div class="cube__face cube__face--2">2</div>
+                            <div class="cube__face cube__face--3">3</div>
+                            <div class="cube__face cube__face--4">4</div>
+                            <div class="cube__face cube__face--5">5</div>
+                            <div class="cube__face cube__face--6">6</div>
+                        </div>
+                    </div>
+                    <button id="roll-btn">Roll Dice</button>
+                    <p id="dice-result-text">Waiting to roll...</p>
+                    <button id="restart-btn" style="display: none;">Play Again 🔄</button>
+                </div>
+            </div>
+
+            <div class="panels-right">
+                <div id="panel-1" class="player-panel green-panel">
+                    <h3 id="name-1">Player 2</h3>
+                    <p>Tokens in base: <span id="base-1">4</span></p>
+                </div>
+                <div id="panel-2" class="player-panel yellow-panel">
+                    <h3 id="name-2">Player 3</h3>
+                    <p>Tokens in base: <span id="base-2">4</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <script src="script.js"></script>
+</body>
+</html>
